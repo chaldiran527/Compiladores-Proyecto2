@@ -1,0 +1,11 @@
+Codigo Token: 54, Nombre Token: FESTIVAL, Valor: function, Linea: 1, Columna: 1
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 1, Columna: 10
+
+Codigo Token: 56, Nombre Token: ARBOL, Valor: main, Linea: 1, Columna: 14
+
+Codigo Token: 6, Nombre Token: ABRECUENTO, Valor: (, Linea: 1, Columna: 19
+
+Codigo Token: 7, Nombre Token: CIERRACUENTO, Valor: ), Linea: 1, Columna: 20
+
+Cantidad de lexemas encontrados: 5

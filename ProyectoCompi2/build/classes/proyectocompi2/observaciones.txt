@@ -1,0 +1,27 @@
+Valor:	10.0%	 	 
+Total de Puntos:	100	 	 
+Estudiante:	 	 
+Total Puntos Obtenidos:	87.5	 	 
+Nota:	87.5	 	 
+Porcentaje Obtenido:	8.75	 	 
+ 	 	 	 
+ 	 	 	 
+ 	 	 	 
+Ítem Funcionales	Puntos	Puntaje Obtenido	 
+Gramática	 	 	 
+Manejo de bloques	8	6.5	creaRegalo ::= … | PERSONA ENTREGA exprRegalo y exprRegalo ::=   ... | creaRegalo genersa código no permite asignación en asignación
+Manejo de tipos	11	11	 
+Manejo de expresiones binarias	10	8	permite operandos no válidos por exprRegalo
+Manejo de expresiones unarias	4	4	 
+Manejo de expresiones relacionales	10	9	permite operandos no válidos por exprRegalo
+Manejo de expresiones lógicas	5	4	exprRegalo not_gaspar exprRegalo incorrecto
+Manejo estructuras de control	12	10	no se debe implementar switch
+deben respetar los nombres de las estructuras es do until, no while ni do while
+Combinación de expresiones	5	3	deben revisar la combinación para que sólo se combinen las válidas, esto en expresion_regalo
+Print y read	6	6	 
+Funciones	10	9	permite parámetros no válidos en invocación por exprRegalo
+Main	3	3	 
+Comentarios	3	3	 
+Genera Árbol Sintáctico (permite derivación)	8	6	permite generar expresiones no válidas por expresion_regalo
+Ítem No Funcionales	Puntos	Puntaje Obtenido	 
+Documentación Externa	5	5 	 	 	 

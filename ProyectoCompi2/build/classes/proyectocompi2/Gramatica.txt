@@ -1,0 +1,243 @@
+/*
+Gramatica BNF para la tarea 1
+Estudiantes: Juan Mallma Zamora y Adrian Herrera
+*/
+
+//Expresiones regulares utilizadas
+
+LineaNavidena = \r|\n|\r\n
+EspacioBlancoNavideno = {LineaNavidena} | [ \t\f]
+CaracterEntradaNavideno = [^\r\n]
+cinta = [a-zA-Z_]
+cintapapel = [a-zA-Z_0-9]
+
+ComentarioNavideno = {ComentarioTradicionalNavideno} | {ComentarioFinDeLineaNavideno}
+
+ComentarioTradicionalNavideno = "/\_" [^\_] ~"\_/" | "/\_" "\_"+ "/"
+ComentarioFinDeLineaNavideno = "@" {CaracterEntradaNavideno}* {LineaNavidena}?
+
+
+rpersona = {cinta} {cintapapel}*
+rSeparador = \,
+rRegalo = \' {CaracterEntradaNavideno} \'
+
+isantaclaus = [0-9] //digito
+rsantaclaus = [1-9] //digito no cero
+rt_pos_int_sinterklass = [1-9]{isantaclaus}*  //Entero solo positivo
+rt_int_sinterklass =  0 | -?[1-9]{isantaclaus}*  //Entero con positivos y cero
+rt_float_santa = -? ({rsantaclaus} {isantaclaus}+ ("." {isantaclaus}+)? (("e" | "E") -? {isantaclaus}+)?) | ({rsantaclaus} {isantaclaus}+ ("." {isantaclaus}+)? (("e" | "E") -? {isantaclaus}+))  
+
+
+//Palabras reservadas con los terminales que retornan
+"int" 			return t_int_sinterklass
+"float" 		return t_float_santa
+"string" 		return t_string_nicolas
+"char" 			return t_char_dedmoroz
+"define"		return DEFINEREGALO
+"void"			reutrun SINREGALO
+"boolean" 		return t_bool_colacho
+"for"			return ENVUELVE
+"while"			return ESPERARASANTA
+"do"			return HACE
+"until"         return REVISA
+"switch"        return TRINEO
+"case"			return CUERDA
+"default"		return FRENO
+"break"			return CORTA
+"if"			return ELFO
+"else"			return DUENDE
+"elif"			return HADA
+"print"			return NARRA
+"read"			return ESCUCHA
+"return"		return RETORNAREGALO
+
+//Tipos de booleanos y su terminal a retornar 
+"true"			return l_tPAPANOEL
+"false"			return l_fPAPANOEL
+
+//Operadores aritmeticos binarios con sus terminales a retornar
+
+"+"    return sum_dasher;
+"-"    return res_dancer;
+"*"    return mul_prancer;
+"/"    return div_int_vixen;
+"//"   return div_float_blitzen;  
+"%"    return mod_comet;
+"^"    return pow_cupid;
+
+//Operadores aritmeticos unarios con sus terminales
+"--"			return QUIEN
+"++"			return GRINCH
+
+//asignacion, tipos de parentesis con sus terminales a retornar
+"<="   			return ENTREGA
+"|"				return FINREGALO
+“(“   			return ABRECUENTO
+“)” 			return CIERRACUENTO
+“[“   			return ABREEMPAQUE
+“]” 			return CIERRAEMPAQUE
+“{“   			return ABREEMPAQUE
+“}” 			return CIERRAEMPAQUE
+":"				return LUCES
+
+//Terminales relacionales
+"=="			return e_jinglebell
+"!="			return ne_tinseltoes
+"<"				return l_slinky
+">"				return g_merryberry
+"=>"			return ge_snowflake
+"=<"			return le_candycane
+
+//Terminales de operadores logicos
+"^"				return and_melchior
+"#"				return or_balthassar
+"!"				return not_gaspar
+
+//Identificador con su terminal a usar
+rpersona 		return PERSONA
+
+//Literales con sus terminales
+rt_int_sinterklass 			return l_int_dedmoroz
+rt_pos_int_sinterklass 		return l_pos_int_dedmoroz
+rt_float_santa 				return l_float_padrenavidadS
+rRegalo 					return l_MINIREGALO
+rSeparador					return SEPARAREGALO
+
+
+//No terminales definidos para nuestra gramatica: 
+//Producciones de la gramatica
+//Simbolo inicial
+navidad ::= bolsaNavidena ;
+bolsaNavidena ::= bolsaNavidenaAux ;
+
+//Llamada recursiva para llamar 1 o mas funciones 
+bolsaNavidenaAux ::= defBolsaNavidena | bolsaNavidenaAux defBolsaNavidena ;
+
+
+//Definicion del tipo y llamado al codigo dentro de la funcion
+defBolsaNavidena ::= bolsasNavidenas codigoBolsaNavidena ;
+
+//Se definen tipos de funciones: main, tipo sin parametros y tipo con parametros 
+bolsasNavidenas ::= "function" "int" "main" ABRECUENTO CIERRACUENTO 
+					| "function" tsantaclaus PERSONA ABRECUENTO CIERRACUENTO  
+					| "function" tsantaclaus PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO ; 
+
+//Cuerpo de la funcion con las lineas de codigo entre corchetes {...}
+codigoBolsaNavidena ::= ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
+
+//Definicion recursiva para poder llamar varias lineas de Codigo
+lineasDeNavidad ::= auxLineasDeNavidad | lineasDeNavidad auxLineasDeNavidad ;
+
+//Distintos tipos de lineas que se pueden utilizar dentro de funciones incluyendo estructuras de control y asignaciones
+auxLineasDeNavidad ::= creaRegalo FINREGALO 
+					 | pesebre | exprRegalo FINREGALO
+					 | RETORNAREGALO exprRegalo FINREGALO
+					 | CORTA FINREGALO ;
+
+//No terminal de palabras reservadas para Tipos de datos
+tsantaclaus ::= 
+	t_int_sinterklass |
+	t_float_santa |
+	t_string_nicolas |
+	t_bool_colacho |
+	t_char_dedmoroz;
+
+//No terminal de literales
+tlsantaclaus ::=
+	l_int_dedmoroz |
+	l_float_santa |
+	l_string_nicolas | 
+	l_MINIREGALO |    //char
+	l_tPAPANOEL | //true
+	l_fPAPANOEL;   //false
+
+//Tipos de expresiones presentes en el lenguaje, incluyendo literales, asignaciones, multiples expresiones en parentesis 
+//expresiones aritmeticas unarias/binarias, logicas, relacionales y llamados a funcoines
+exprRegalo ::=  tlsantaclaus | creaRegalo | ABRECUENTO expresionesBastoncitos CIERRACUENTO 
+				| ABREREGALO expresionesBastoncitos CIERRAREGALO | ABREEMPAQUE expresionesBastoncitos CIERRAEMPAQUE
+				| regaloprinBinario | regaloprinUnario | regalocompradoRelacional 
+				| regaloManual | pedirBolsaNavidena ;
+
+//Creacion, llamados y asignaciones a variables, incluyendo arreglos
+creaRegalo ::= "local" tsantaclaus PERSONA  | "local" tsantaclaus PERSONA ENTREGA exprRegalo
+				| PERSONA ENTREGA exprRegalo 
+				| "local" tsanataclaus PERSONA "[" l_pos_int_dedmoroz "]" 
+				| "local" tsanataclaus PERSONA "[" l_pos_int_dedmoroz "]" ENTREGA exprRegalo 
+				| PERSONA "[" l_pos_int_dedmoroz "]" ENTREGA exprRegalo 
+				| PERSONA | PERSONA "[" l_pos_int_dedmoroz "]";
+
+
+//Estructuras de control utilizadas en el lenguaje
+pesebre ::= while_esperarasanta | for_envuelve | do_hace | switch_trineo | if_elfo ;
+
+//Definicion del bucle while () {...}
+while_esperarasanta ::= ESPERARASANTA ABRECUENTO regalocompradoRelacional CIERRACUENTO ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
+
+//Definicion for(int i = 0; i < 4; i++){...}
+for_esperarasanta ::= ENVUELVE ABRECUENTO creaREGALO FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
+
+//Definicien del do-while: do{...} while()|
+do_hace ::= HACE ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ESPERARASANTA ABRECUENTO exprRegalo FINREGALO ;
+
+//Definicion del switch 
+switch_trineo ::= TRINEO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO switch_trineo_codigo CIERRACUENTO ;
+
+//Se definen los multiples case que puede tener el switch
+switch_trineo_codigo ::= switch_trineo_caso | switch_trineo_codigo switch_trineo_caso ;
+
+//"case numero: ..."    o   "default: ..." 
+switch_trineo_caso ::= CUERDA exprRegalo LUCES lineasDeNavidad | FRENO LUCES lineasDeNavidad ;
+
+//Los casos del if, else y elif
+if_elfo ::= ELFO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO 
+		| DUENDE ABRECUENTO lineasDeNavidad CIERRACUENTO | HADA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO ;
+
+//Lista de expresiones (,,), definidos recursivamente para poder tener uno o mas 
+expresionesBastoncitos ::= defExprBastoncito | expresionesBastoncitos SEPARAREGALO defExprBastoncito ;
+defExprBastoncito ::= exprRegalo;
+
+
+//Parametros de funciones (,,), definidos recursivamente para poder tener uno o mas 
+paramBastoncitos ::= defParamBastoncito | paramBastoncitos SEPARAREGALO defParamBastoncito ;
+defParamBastoncito ::= tsantaclaus PERSONA ;
+
+
+//Operaciones aritmeticas binarias
+regaloprinBinario ::= exprRegalo sum_dasher exprRegalo |
+					exprRegalo res_dancer exprRegalo |
+					exprRegalo div_int_vixen exprRegalo |
+					exprRegalo div_float_blitzen exprRegalo |
+					exprRegalo mod_comet exprRegalo |
+					exprRegalo pow_cupid exprRegalo ;
+
+//Operaciones aritmeticas unarias --a, ++a, a++, a--
+regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA | PERSONA QUIEN | PERSONA GRINCH; 
+
+//Operaciones relacionales
+// a < b,  a < b, a == b, a != b, a => b, a =< b
+regalocompradoRelacional ::= exprRegalo l_slinky exprRegalo | 
+							exprRegalo g_merryberry exprRegalo |
+							exprRegalo e_jinglebell exprRegalo |
+							exprRegalo ne_tinseltoes exprRegalo |
+							exprRegalo ge_snowflake exprRegalo |
+							exprRegalo le_candycane exprRegalo ;
+
+//Operaciones logicas
+// a ^ b, a # b, !a 
+regaloManual ::= exprRegalo and_melchior exprRegalo |
+				exprRegalo or_balthassar exprRegalo |
+				exprRegalo not_gaspar exprRegalo ;
+
+
+//Diferentes casos posibles de llamar a una funcion 
+pedirBolsaNavidena ::= PERSONA ABRECUENTO CIERRACUENTO |
+					   PERSONA ABRECUENTO expresionesBastoncitos CIERRACUENTO |
+					   printBolsaNavidena | readBolsaNavidena ;
+
+
+//Llamados de print (expresion) y ("", , ...)
+printBolsaNavidena ::= NARRA ABRECUENTO exprRegalo CIERRACUENTO
+					| NARRA ABRECUENTO l_string_nicolas SEPARAREGALO expresionesBastoncitos CIERRACUENTO;
+
+//Llamados de read con cero parametros y con el caso de que hayan uno o mas parametros 
+readBolsaNavidena ::= ESCUCHA ABRECUENTO CIERRACUENTO | ESCUCHA ABRECUENTO expresionesBastoncitos CIERRACUENTO;

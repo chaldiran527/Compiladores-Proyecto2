@@ -30,7 +30,7 @@ public class sym {
   public static final int NAVIDAD = 49;
   public static final int div_int_vixen = 29;
   public static final int pow_cupid = 32;
-  public static final int NARRA = 60;
+  public static final int NARRA = 61;
   public static final int t_float_santa = 9;
   public static final int HACE = 42;
   public static final int ENVUELVE = 41;
@@ -49,9 +49,9 @@ public class sym {
   public static final int ABRECUENTO = 6;
   public static final int sum_dasher = 26;
   public static final int l_float_padrenavidad = 16;
-  public static final int ESCUCHA = 61;
+  public static final int ESCUCHA = 62;
   public static final int ABREREGALO = 2;
-  public static final int ERROR = 59;
+  public static final int ERROR = 60;
   public static final int ARBOL = 56;
   public static final int l_slinky = 20;
   public static final int ENVIA = 44;
@@ -60,6 +60,7 @@ public class sym {
   public static final int t_string_nicolas = 11;
   public static final int l_tPAPANOEL = 37;
   public static final int l_fPAPANOEL = 36;
+  public static final int NATIVIDAD = 59;
   public static final int ge_snowflake = 21;
   public static final int t_int_sinterklass = 15;
   public static final int ELFO = 38;
@@ -130,6 +131,7 @@ public class sym {
   "ARBOL",
   "t_char_dedmoroz",
   "l_string_nicolas",
+  "NATIVIDAD",
   "ERROR",
   "NARRA",
   "ESCUCHA"

@@ -1,0 +1,155 @@
+Codigo Token: 54, Nombre Token: FESTIVAL, Valor: function, Linea: 1, Columna: 1
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 1, Columna: 10
+
+Codigo Token: 56, Nombre Token: ARBOL, Valor: main, Linea: 1, Columna: 14
+
+Codigo Token: 6, Nombre Token: ABRECUENTO, Valor: (, Linea: 1, Columna: 19
+
+Codigo Token: 7, Nombre Token: CIERRACUENTO, Valor: ), Linea: 1, Columna: 20
+
+Codigo Token: 2, Nombre Token: ABREREGALO, Valor: {, Linea: 1, Columna: 22
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 2, Columna: 5
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 2, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: numero, Linea: 2, Columna: 15
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 2, Columna: 21
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 3, Columna: 5
+
+Codigo Token: 11, Nombre Token: t_string_nicolas, Valor: string, Linea: 3, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: numeroGrande, Linea: 3, Columna: 18
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 3, Columna: 30
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 4, Columna: 5
+
+Codigo Token: 10, Nombre Token: t_bool_colacho, Valor: boolean, Linea: 4, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: bandera, Linea: 4, Columna: 19
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 4, Columna: 27
+
+Codigo Token: 36, Nombre Token: l_fPAPANOEL, Valor: false, Linea: 4, Columna: 30
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 4, Columna: 35
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 5, Columna: 5
+
+Codigo Token: 57, Nombre Token: t_char_dedmoroz, Valor: char, Linea: 5, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: numeroGrande, Linea: 5, Columna: 16
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 5, Columna: 28
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 6, Columna: 5
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 6, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: var, Linea: 6, Columna: 15
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 6, Columna: 19
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 22, Linea: 6, Columna: 22
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 6, Columna: 24
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: var, Linea: 7, Columna: 5
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 7, Columna: 9
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 12, Linea: 7, Columna: 12
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 7, Columna: 14
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 8, Columna: 5
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 8, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: arreglo, Linea: 8, Columna: 15
+
+Codigo Token: 4, Nombre Token: ABREEMPAQUE, Valor: [, Linea: 8, Columna: 23
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 10, Linea: 8, Columna: 24
+
+Codigo Token: 5, Nombre Token: CIERRAEMPAQUE, Valor: ], Linea: 8, Columna: 26
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 8, Columna: 27
+
+Codigo Token: 59, Nombre Token: NATIVIDAD, Valor: local, Linea: 9, Columna: 5
+
+Codigo Token: 15, Nombre Token: t_int_sinterklass, Valor: int, Linea: 9, Columna: 11
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: arreglo2, Linea: 9, Columna: 15
+
+Codigo Token: 4, Nombre Token: ABREEMPAQUE, Valor: [, Linea: 9, Columna: 24
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 10, Linea: 9, Columna: 25
+
+Codigo Token: 5, Nombre Token: CIERRAEMPAQUE, Valor: ], Linea: 9, Columna: 27
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 9, Columna: 29
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 2, Linea: 9, Columna: 32
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 9, Columna: 33
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: arreglo2, Linea: 10, Columna: 5
+
+Codigo Token: 4, Nombre Token: ABREEMPAQUE, Valor: [, Linea: 10, Columna: 14
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 10, Linea: 10, Columna: 15
+
+Codigo Token: 5, Nombre Token: CIERRAEMPAQUE, Valor: ], Linea: 10, Columna: 17
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 10, Columna: 19
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 2, Linea: 10, Columna: 22
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 10, Columna: 23
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: arreglo2, Linea: 11, Columna: 5
+
+Codigo Token: 4, Nombre Token: ABREEMPAQUE, Valor: [, Linea: 11, Columna: 14
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 10, Linea: 11, Columna: 15
+
+Codigo Token: 5, Nombre Token: CIERRAEMPAQUE, Valor: ], Linea: 11, Columna: 17
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 11, Columna: 18
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: var, Linea: 12, Columna: 5
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 12, Columna: 9
+
+Codigo Token: 33, Nombre Token: not_gaspar, Valor: !, Linea: 12, Columna: 12
+
+Codigo Token: 37, Nombre Token: l_tPAPANOEL, Valor: true, Linea: 12, Columna: 13
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 12, Columna: 17
+
+Codigo Token: 48, Nombre Token: PERSONA, Valor: var, Linea: 13, Columna: 5
+
+Codigo Token: 51, Nombre Token: ENTREGA, Valor: <=, Linea: 13, Columna: 9
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 1, Linea: 13, Columna: 12
+
+Codigo Token: 22, Nombre Token: le_candycane, Valor: =<, Linea: 13, Columna: 14
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 2, Linea: 13, Columna: 17
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 13, Columna: 18
+
+Codigo Token: 52, Nombre Token: RETORNAREGALO, Valor: return, Linea: 14, Columna: 5
+
+Codigo Token: 16, Nombre Token: l_float_padrenavidad, Valor: 33, Linea: 14, Columna: 12
+
+Codigo Token: 23, Nombre Token: FINREGALO, Valor: |, Linea: 14, Columna: 14
+
+Codigo Token: 3, Nombre Token: CIERRAREGALO, Valor: }, Linea: 15, Columna: 1
+
+Cantidad de lexemas encontrados: 77

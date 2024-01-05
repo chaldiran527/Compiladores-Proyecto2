@@ -55,6 +55,7 @@ Identifier = [:jletter:] [:jletterdigit:]*
 digito = [0-9]
 digitoNoCero = [1-9]
 DecIntegerLiteral =  0 | -?[1-9]{digito}* 
+//rt_pos_int_sinterklass = [1-9]{digito}*
 Float = -? (0 | {digitoNoCero} {digito}*) ("." {digito}+)? (("e" | "E") -? {digito}+)?
 
 //Operadores de asignacion, booleanos y finalizacion
@@ -97,14 +98,14 @@ Character = \' {InputCharacter} \'
 <YYINITIAL> "do"                 { return symbol(sym.HACE); }
 <YYINITIAL> "until"              { return symbol(sym.REVISA); }
 <YYINITIAL> "switch"             { return symbol(sym.TRINEO); }
-<YYINITIAL> "return"             { return symbol(sym.ENVIA); }
+<YYINITIAL> "local"             { return symbol(sym.NATIVIDAD); }
 <YYINITIAL> "break"              { return symbol(sym.CORTA); }
 <YYINITIAL> "print"              { return symbol(sym.NARRA); }
 <YYINITIAL> "read"               { return symbol(sym.ESCUCHA); }
 <YYINITIAL> "float"              { return symbol(sym.t_float_santa); }
 <YYINITIAL> "boolean"            { return symbol(sym.t_bool_colacho); }
 <YYINITIAL> "string"                { return symbol(sym.t_string_nicolas); }
-<YYINITIAL> "char"               { return symbol(sym.l_MINIREGALO); }
+<YYINITIAL> "char"               { return symbol(sym.t_char_dedmoroz); }
 <YYINITIAL> "arr"                { return symbol(sym.t_arr_noel); }
 <YYINITIAL> "int"                { return symbol(sym.t_int_sinterklass); }
 <YYINITIAL> "void"                { return symbol(sym.SINREGALO); }
@@ -178,7 +179,9 @@ Character = \' {InputCharacter} \'
     {Identifier}                   { return symbol(sym.PERSONA, yytext()); }
 
     //Tipos de datos literales
-    {Character}                    { return symbol(sym.t_char_dedmoroz, yytext());} 
+    {Character}                    { return symbol(sym.l_MINIREGALO, yytext());} 
+
+//{rt_pos_int_sinterklass}       { return symbol(sym.l_pos_int_dedmoroz, yytext());} 
     {Float}                        { return symbol(sym.l_float_padrenavidad, yytext());}
     {DecIntegerLiteral}            { return symbol(sym.l_int_dedmoroz, yytext()); }
  

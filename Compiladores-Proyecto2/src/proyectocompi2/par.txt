@@ -1,5 +1,5 @@
 /* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
-package ParserLexer;
+package proyectocompi2;
 import java_cup.runtime.*;
 
 //Acciones predefinidas por el codigo proporcionado en la pagina de CUP
@@ -74,10 +74,12 @@ start with navidad;
 
 //Simbolo inicial
 navidad ::= {:
-    System.out.println("\nPrueba inicial.");
+    System.out.println("\nNavidad.");
   :}  bolsaNavidena;
 
-bolsaNavidena ::= bolsaNavidenaAux;
+bolsaNavidena ::=  {:
+    System.out.println("\nBolsa Navidena.");
+  :}  bolsaNavidenaAux;
 
 //Llamada recursiva para llamar 1 o mas funciones 
 bolsaNavidenaAux ::= defBolsaNavidena | bolsaNavidenaAux defBolsaNavidena ;
@@ -87,7 +89,9 @@ bolsaNavidenaAux ::= defBolsaNavidena | bolsaNavidenaAux defBolsaNavidena ;
 defBolsaNavidena ::= bolsasNavidenas ; //codigoBolsaNavidena ;
 
 //Se definen tipos de funciones: main, tipo sin parametros y tipo con parametros 
-bolsasNavidenas ::= FESTIVAL t_int_sinterklass ARBOL ABRECUENTO CIERRACUENTO 
+bolsasNavidenas ::= FESTIVAL t_int_sinterklass ARBOL ABRECUENTO CIERRACUENTO  {:
+    System.out.println("\nBolsa Navidena2.");
+  :}  
 					| FESTIVAL tsantaclaus PERSONA ABRECUENTO CIERRACUENTO  
 					;//| FESTIVAL tsantaclaus PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO ;
 

@@ -1,6 +1,6 @@
 /* https://www.jflex.de/manual.html */
 /* JFlex example: partial Java language lexer specification */
-package ParserLexer;
+package proyectocompi2;
 import java.io.StringReader;
 import java_cup.runtime.*;
 

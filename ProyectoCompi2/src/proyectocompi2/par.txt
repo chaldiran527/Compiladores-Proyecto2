@@ -68,11 +68,13 @@ non terminal tsantaclaus, tlsantaclaus;
 //No terminales de funciones
 non terminal bolsaNavidena, bolsaNavidenaAux, defBolsaNavidena, bolsasNavidenas, codigoBolsaNavidena;
 
+//No terminales de multiples parametros
+non terminal paramBastoncitos, defParamBastoncito;
 //No terminales de lineas y sentencias de codigo 
 non terminal lineasDeNavidad, auxLineasDeNavidad, creaRegalo; 
 
 //No terminales de expresiones y asignaciones
-non terminal exprRegalo, regaloManual, regalocompradoRelacional;
+non terminal exprRegalo, regaloManual, regalocompradoRelacional, regaloprinBinario, regaloprinUnario;
 
 /* No terminal Inicial */
 non terminal navidad; 
@@ -80,15 +82,13 @@ non terminal navidad;
 
 /*Definicion del orden de las precedencias*/
 
-//precedence left ENTREGA; // a > b,  a < b, a == b, a != b, a => b, a =< b
-/*
-precedence left g_merryberry,
-                l_slinky,
-                e_jinglebell,
-                ne_tinseltoes,
-                ge_snowflake,
-                le_candycane;
-*/
+precedence left res_dancer, sum_dasher;
+precedence left div_int_vixen, div_float_blitzen, mul_prancer;
+precedence left mod_comet, pow_cupid;
+
+precedence left GRINCH,
+                QUIEN;
+                
 precedence left le_candycane,
             ge_snowflake,
             ne_tinseltoes,
@@ -119,10 +119,13 @@ bolsaNavidenaAux ::= defBolsaNavidena | bolsaNavidenaAux defBolsaNavidena ;
 //Definicion del tipo y llamado al codigo dentro de la funcion
 defBolsaNavidena ::= bolsasNavidenas codigoBolsaNavidena ;
 
-//Se definen tipos de funciones: main, tipo sin parametros y tipo con parametros 
+//Se definen tipos de funciones: main,void, tipo sin parametros y tipo con parametros 
 bolsasNavidenas ::= FESTIVAL t_int_sinterklass ARBOL ABRECUENTO CIERRACUENTO 
-					| FESTIVAL tsantaclaus PERSONA ABRECUENTO CIERRACUENTO  
-					; //| FESTIVAL tsantaclaus PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO ;
+					| FESTIVAL tsantaclaus PERSONA ABRECUENTO CIERRACUENTO 
+					| FESTIVAL SINREGALO PERSONA ABRECUENTO CIERRACUENTO 
+					| FESTIVAL tsantaclaus PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO 
+					| FESTIVAL SINREGALO PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO 
+                                        ;
 
 
 //No terminal de palabras reservadas para Tipos de datos
@@ -144,7 +147,7 @@ tlsantaclaus ::=
 	l_fPAPANOEL:l {: RESULT = l; :} ;  
 
 //Cuerpo de la funcion con las lineas de codigo entre corchetes {...}
-codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO ; 
+codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO | ABREREGALO CIERRAREGALO; 
 
 
 //Definicion recursiva para poder llamar varias lineas de Codigo
@@ -152,6 +155,7 @@ lineasDeNavidad ::= auxLineasDeNavidad | lineasDeNavidad auxLineasDeNavidad ;
 
 //Distintos tipos de lineas que se pueden utilizar dentro de funciones incluyendo estructuras de control y asignaciones
 auxLineasDeNavidad ::= creaRegalo FINREGALO 
+                        | exprRegalo FINREGALO
                                 | RETORNAREGALO tlsantaclaus FINREGALO;
 
 //Creacion, llamados y asignaciones a variables, incluyendo arreglos
@@ -164,7 +168,7 @@ creaRegalo ::= NATIVIDAD tsantaclaus PERSONA | NATIVIDAD tsantaclaus PERSONA ENT
 
 //Tipos de expresiones presentes en el lenguaje, incluyendo literales, asignaciones, multiples expresiones en parentesis 
 //expresiones aritmeticas unarias/binarias, logicas, relacionales y llamados a funciones
-exprRegalo ::=  tlsantaclaus | regaloManual;
+exprRegalo ::=  tlsantaclaus | regalocompradoRelacional | regaloManual | regaloprinBinario | regaloprinUnario;
 
 //Operaciones relacionales
 // a > b,  a < b, a == b, a != b, a => b, a =< b
@@ -175,10 +179,28 @@ regalocompradoRelacional ::= exprRegalo g_merryberry exprRegalo |
                                     exprRegalo ge_snowflake exprRegalo |
                                     exprRegalo le_candycane exprRegalo ;
 
+//Parametros de funciones (,,), definidos recursivamente para poder tener uno o mas 
+paramBastoncitos ::= defParamBastoncito | paramBastoncitos SEPARAREGALO defParamBastoncito ;
+defParamBastoncito ::= tsantaclaus PERSONA ;
+
 //Operaciones logicas
 // a ^ b, a # b, !a 
 regaloManual ::= exprRegalo and_melchior exprRegalo |
 				exprRegalo or_balthassar exprRegalo |
 				not_gaspar exprRegalo ;
+
+//Operaciones aritmeticas unarias --a, ++a, a++, a--
+regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA; //| PERSONA QUIEN | PERSONA GRINCH; 
+
+
+//Operaciones aritmeticas binarias a+b; a-b, a/b, a//b,a*b a**b, 
+regaloprinBinario ::= exprRegalo sum_dasher exprRegalo |
+					exprRegalo res_dancer exprRegalo |
+					exprRegalo mul_prancer exprRegalo |
+					exprRegalo div_int_vixen exprRegalo |
+					exprRegalo div_float_blitzen exprRegalo |
+					exprRegalo mod_comet exprRegalo |
+					exprRegalo pow_cupid exprRegalo ;
+
 
 

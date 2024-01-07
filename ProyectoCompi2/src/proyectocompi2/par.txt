@@ -69,12 +69,16 @@ non terminal tsantaclaus, tlsantaclaus;
 non terminal bolsaNavidena, bolsaNavidenaAux, defBolsaNavidena, bolsasNavidenas, codigoBolsaNavidena;
 
 //No terminales de multiples parametros
-non terminal paramBastoncitos, defParamBastoncito;
+non terminal paramBastoncitos, defParamBastoncito, expresionesBastoncitos, defExprBastoncito;
+
 //No terminales de lineas y sentencias de codigo 
-non terminal lineasDeNavidad, auxLineasDeNavidad, creaRegalo; 
+non terminal lineasDeNavidad, auxLineasDeNavidad, creaRegalo, asignaRegalo, asignaMultiplesRegalos; 
 
 //No terminales de expresiones y asignaciones
-non terminal exprRegalo, regaloManual, regalocompradoRelacional, regaloprinBinario, regaloprinUnario;
+non terminal exprRegalo, regaloManual, regalocompradoRelacional, regaloprinBinario, regaloprinUnario, pedirBolsaNavidena, printBolsaNavidena, readBolsaNavidena ;
+
+//No terminales de estructuras de control 
+non terminal pesebre, while_esperarasanta, condicion_esperarasanta, for_envuelve, do_hace, if_elfo, elif_hada_duende, elif_hada, def_elif_hada, else_duende;
 
 /* No terminal Inicial */
 non terminal navidad; 
@@ -146,6 +150,8 @@ tlsantaclaus ::=
 	l_tPAPANOEL:l {: RESULT = l; :}  | 
 	l_fPAPANOEL:l {: RESULT = l; :} ;  
 
+ 
+
 //Cuerpo de la funcion con las lineas de codigo entre corchetes {...}
 codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO | ABREREGALO CIERRAREGALO; 
 
@@ -154,21 +160,87 @@ codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO | ABREREGALO CIE
 lineasDeNavidad ::= auxLineasDeNavidad | lineasDeNavidad auxLineasDeNavidad ;
 
 //Distintos tipos de lineas que se pueden utilizar dentro de funciones incluyendo estructuras de control y asignaciones
-auxLineasDeNavidad ::= creaRegalo FINREGALO 
+auxLineasDeNavidad ::= creaRegalo FINREGALO | asignaRegalo FINREGALO
+                        | pesebre
                         | exprRegalo FINREGALO
-                                | RETORNAREGALO tlsantaclaus FINREGALO;
+                        | PERSONA asignaMultiplesRegalos FINREGALO
+                        | NARRA ABRECUENTO exprRegalo CIERRACUENTO FINREGALO
+                        //print("",1,2,3)|
+                        | NARRA ABRECUENTO l_string_nicolas SEPARAREGALO expresionesBastoncitos CIERRACUENTO FINREGALO
+                                | RETORNAREGALO tlsantaclaus FINREGALO
+                                | codigoBolsaNavidena
+                                | CORTA FINREGALO ;
 
 //Creacion, llamados y asignaciones a variables, incluyendo arreglos
 //local int var; local int var = 2; local int arreglo [10]
 creaRegalo ::= NATIVIDAD tsantaclaus PERSONA | NATIVIDAD tsantaclaus PERSONA ENTREGA exprRegalo
-                | PERSONA ENTREGA exprRegalo | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE
-                | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo 
-                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo 
-                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ; // PERSONA
+                | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE
+                | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo
+		| NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE asignaMultiplesRegalos //ABREREGALO expresionesBastoncitos CIERRAREGALO
+                ; // | PERSONA ;
+
+asignaRegalo ::= PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo | PERSONA ENTREGA exprRegalo ;
+
+asignaMultiplesRegalos ::= ENTREGA ABREREGALO expresionesBastoncitos CIERRAREGALO;
+
+//Diferentes casos posibles de llamar a una funcion 
+pedirBolsaNavidena ::= PERSONA ABRECUENTO CIERRACUENTO |
+					   PERSONA ABRECUENTO expresionesBastoncitos CIERRACUENTO
+					   | readBolsaNavidena ;//printBolsaNavidena ;//;
+
+
+//Llamados de print (expresion) y ("", , ...)
+//printBolsaNavidena ::= NARRA ABRECUENTO exprRegalo CIERRACUENTO;
+//					| NARRA ABRECUENTO l_string_nicolas SEPARAREGALO expresionesBastoncitos CIERRACUENTO;
+
+//Llamados de read con cero parametros y con el caso de que hayan uno o mas parametros 
+readBolsaNavidena ::= ESCUCHA ABRECUENTO CIERRACUENTO | ESCUCHA ABRECUENTO expresionesBastoncitos CIERRACUENTO;
+
 
 //Tipos de expresiones presentes en el lenguaje, incluyendo literales, asignaciones, multiples expresiones en parentesis 
 //expresiones aritmeticas unarias/binarias, logicas, relacionales y llamados a funciones
-exprRegalo ::=  tlsantaclaus | regalocompradoRelacional | regaloManual | regaloprinBinario | regaloprinUnario;
+exprRegalo ::=  tlsantaclaus | regalocompradoRelacional | regaloManual | regaloprinBinario | regaloprinUnario | PERSONA
+                                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE 
+                                | ABRECUENTO expresionesBastoncitos CIERRACUENTO
+				| ABREEMPAQUE expresionesBastoncitos CIERRAEMPAQUE
+                                | pedirBolsaNavidena; //
+
+
+//Estructuras de control utilizadas en el lenguaje
+pesebre ::= while_esperarasanta | for_envuelve  | do_hace | if_elfo ; //| switch_trineo 
+
+//Definicien del do-while: do{...} until()|
+do_hace ::= HACE ABREREGALO lineasDeNavidad CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO
+             | HACE ABREREGALO CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO; 
+
+//REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO 
+//            HACE ABREREGALO CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO ;
+
+
+//Definicion del bucle while () {...}
+while_esperarasanta ::= ESPERARASANTA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO
+                        | ESPERARASANTA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO CIERRAREGALO ;
+
+condicion_esperarasanta ::=  l_tPAPANOEL:l {: RESULT = l; :}  
+                              |   l_fPAPANOEL:l {: RESULT = l; :} 
+                        | regalocompradoRelacional;
+
+//Definicion for(int i = 0; i < 4; i++){...}
+for_envuelve ::= ENVUELVE ABRECUENTO asignaRegalo FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO 
+                | ENVUELVE ABRECUENTO asignaRegalo FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREREGALO CIERRAREGALO ;
+
+//Los casos del if(elfo), else(duende) y elif(hada). if(), if(){}else{}, if()elif(){}...else{}
+if_elfo ::= ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO 
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO 
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO elif_hada_duende
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO elif_hada_duende DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO ;
+
+//Caso elif con varios posibles elif y otro elif else
+elif_hada_duende ::= elif_hada | else_duende elif_hada ;
+elif_hada ::= def_elif_hada | elif_hada def_elif_hada ;
+def_elif_hada ::= HADA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO ;
+else_duende ::= DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO ;
+
 
 //Operaciones relacionales
 // a > b,  a < b, a == b, a != b, a => b, a =< b
@@ -178,6 +250,10 @@ regalocompradoRelacional ::= exprRegalo g_merryberry exprRegalo |
                                     exprRegalo ne_tinseltoes exprRegalo |
                                     exprRegalo ge_snowflake exprRegalo |
                                     exprRegalo le_candycane exprRegalo ;
+
+//Lista de expresiones (,,), definidos recursivamente para poder tener uno o mas 
+expresionesBastoncitos ::= defExprBastoncito | expresionesBastoncitos SEPARAREGALO  defExprBastoncito ;
+defExprBastoncito ::= exprRegalo;
 
 //Parametros de funciones (,,), definidos recursivamente para poder tener uno o mas 
 paramBastoncitos ::= defParamBastoncito | paramBastoncitos SEPARAREGALO defParamBastoncito ;
@@ -190,7 +266,7 @@ regaloManual ::= exprRegalo and_melchior exprRegalo |
 				not_gaspar exprRegalo ;
 
 //Operaciones aritmeticas unarias --a, ++a, a++, a--
-regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA; //| PERSONA QUIEN | PERSONA GRINCH; 
+regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA; //|
 
 
 //Operaciones aritmeticas binarias a+b; a-b, a/b, a//b,a*b a**b, 
@@ -201,6 +277,4 @@ regaloprinBinario ::= exprRegalo sum_dasher exprRegalo |
 					exprRegalo div_float_blitzen exprRegalo |
 					exprRegalo mod_comet exprRegalo |
 					exprRegalo pow_cupid exprRegalo ;
-
-
 

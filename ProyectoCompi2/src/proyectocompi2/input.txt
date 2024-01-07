@@ -8,12 +8,60 @@ function int main () {
     var [10] <= 33|
     var <= 1 # 2|
     var <= 1 => 2|
-    var <= 1 - 3|
+    var <= 1 // 3|
     var <= ++var|
     --var|
     return 33|
 }
 
 function void carrier ( int num1, char caracter, int num2) {
+    while(false){
+       var <= ++var| 
+       var <= i < 2|
+       break|
+    }
+
+    for(i <= 0| i < 2| ++i){
+       var <= i < 2|
+    }
+
+@   do{
+@       var <= ++var| 
+
+@   } until(false)|
+
+    do {
+
+    } until(true)|
+    
+    do {
+        var <= ++var|     
+    } until(1 < 2)|
+
+    if(true){
+        var <= ++var|           
+    }
+   elif(true){
+        var <= ++var|
+    }
+    elif(true){
+        var <= ++var|
+    }
+    else{
+        var <= ++var|
+    }
+    @local int arreglo[3] <= (1)| 
+    var <= (1,2,3)|
+    {
+
+    }
+    var <= arreglo[2]|
+    funcion()|  
+    funcion(1,2,3)|
+    var <= funcion(1,2,3)|
+    print(1)|
+    print("Numeros son: %d %d %d",1,2,3)|
+    read(1,2)|
+    var <= read(1,2,3)|
     return true|
-}                                                                                                                                                                                                                                                                                                                                        
+}

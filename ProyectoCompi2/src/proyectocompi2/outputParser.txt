@@ -1,0 +1,25 @@
+
+Tabla de simbolo: main
+Valores : 
+Tipo Entrada: Funcion; Nombre: main; Tipo Dato: int;
+Tipo Entrada: Local, Nombre: numero, Tipo Dato: int.
+Tipo Entrada: Local, Nombre: numeroGrande, Tipo Dato: string.
+Tipo Entrada: Local, Nombre: numeroGrande2, Tipo Dato: boolean.
+Tipo Entrada: Local, Nombre: numeroGrande3, Tipo Dato: char.
+Tipo Entrada: Local, Nombre: var, Tipo Dato: int.
+Tipo Entrada: Local, Nombre: arregloNumerico, Tipo Dato: int[ ] .
+
+
+Tabla de simbolo: void
+Valores : 
+Tipo Entrada: Funcion, Nombre: funError, Tipo Dato: void.
+
+
+Tabla de simbolo: testFunc
+Valores : 
+Tipo Entrada: Funcion, Nombre: testFunc, Tipo Dato: boolean.
+Tipo Entrada: Parametro, Nombre: num1, Tipo Dato: int.
+Tipo Entrada: Parametro, Nombre: caracter, Tipo Dato: char.
+Tipo Entrada: Parametro, Nombre: num2, Tipo Dato: int.
+Tipo Entrada: Local, Nombre: numberFun2, Tipo Dato: int.
+

@@ -2,15 +2,27 @@
 package proyectocompi2;
 import java_cup.runtime.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+
 //Acciones predefinidas por el codigo proporcionado en la pagina de CUP
 action code {:
-    public void hola(){
-        System.out.println("Hola");
-    }
+    
+HashMap<String, ArrayList<String>> listaTablasSimbolos = new HashMap<String, ArrayList<String>>();
+String currentHash;
 
-    public void adios(){
-        System.out.println("Adios");
+public void imprimirTablaSimbolos(){
+    for (String key: listaTablasSimbolos.keySet()) {
+        System.out.println("Tabla de simbolos: " + key);
+        System.out.println("Valores: ");
+        for (String item : listaTablasSimbolos.get(key)){
+            System.out.println(item);
+        }
+        System.out.println(item);
     }
+}
+
 :}
 
 parser code {:

@@ -16,7 +16,7 @@ public class ProyectoCompi2 {
     
     public static void pruebaLexer2() throws Exception {
        // Reader reader = new BufferedReader(new FileReader(rutaScanear));
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\XPC\\OneDrive\\Documentos\\GitHub\\Compiladores-Proyecto2\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
         Reader reader = new InputStreamReader(fileInputStream);
         Lexer lex = new Lexer(reader);
 
@@ -24,7 +24,7 @@ public class ProyectoCompi2 {
         Symbol token;
 
         // Se especifica la ruta del archivo de salida
-        String outputPath = "C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\output.txt";
+        String outputPath = "C:\\Users\\XPC\\OneDrive\\Documentos\\GitHub\\Compiladores-Proyecto2\\ProyectoCompi2\\src\\proyectocompi2\\output.txt";
         // Se inicializa el writer para escribir sobre el archivo
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
@@ -89,7 +89,7 @@ public class ProyectoCompi2 {
         //java -jar java-cup-11b.jar par.txt
         pruebaLexer2();
          System.out.println("\nBEGIN");
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\XPC\\OneDrive\\Documentos\\GitHub\\Compiladores-Proyecto2\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
         Reader reader = new InputStreamReader(fileInputStream);
         Lexer lexer = new Lexer(reader);
         parser p = new parser(lexer);

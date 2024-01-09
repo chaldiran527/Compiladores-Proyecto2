@@ -9,7 +9,10 @@ import java_cup.*;
 import java_cup.runtime.Symbol;
 /**
  *
- * @author Usuario
+ * @autores: Adrian Herrera y Juan Mallma
+ * @Proyecto del curso de compiladores e Interpretes
+ * Profesor: Allan Gabriel Rodriguez Davila
+ * Verano 2023
  */
 public class ProyectoCompi2 {
 
@@ -55,47 +58,29 @@ public class ProyectoCompi2 {
             }
             i++; // Se incrementa el contador de lexemas
         }
-        /*
-         * // // Now the following lines will be reachable after the loop
-         * System.out.println("\nEjecutando el parser para verificar la gramatica...");
-         * lex = new Lexer(reader);
-         * parser p = new parser(lex);
-         * p.parse();
-         * System.out.println("\nPrueba finalizada.");
-         */
+
     }
     /**
-     * @param args the command line arguments
+     * Funcion principal del programa que ejecuta las pruebas,
+     * No recibe parametros obligatorios 
      */
     public static void main(String[] args) throws FileNotFoundException, Exception {
-        // TODO code application logic here
-      
-        /*
-//        try{/*
-//            Lexer lexer = new Lexer( new FileInputStream("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\input.txt"));
-//            parser p = new parser(lexer);
-//            p.parse();
-            FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
-            Reader reader = new InputStreamReader(fileInputStream);
-            Lexer lexer = new Lexer(reader);
-            parser p = new parser(lexer);
-            p.parse();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-*/
-        //Comandos en la carpeta proyecetocompi2 antes de ejecutar el main:
-        //java -jar jflex-full-1.9.1.jar lex.txt
-        //java -jar java-cup-11b.jar par.txt
+        //Se llama a la prueba lexica del archivo 
         pruebaLexer2();
-         System.out.println("\nBEGIN");
+        System.out.println("\nBEGIN");
+        //Se lee el archivo de prueba para el analisis sintactico
         FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\input.txt");
         Reader reader = new InputStreamReader(fileInputStream);
+        //Se carga el archivo en el lexer
         Lexer lexer = new Lexer(reader);
+        //Se inicializa el parser con el lexer
         parser p = new parser(lexer);
+        //Se ejecuta el parseo
         p.parse();
+        //Se verifica si el archivo fuente es generble por la grmatica
+        p.estadoGramatica();
         System.out.println("\nEND");
         
     }
-    
+        
 }

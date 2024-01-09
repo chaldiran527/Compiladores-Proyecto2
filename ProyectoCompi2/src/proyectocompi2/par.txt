@@ -12,10 +12,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-
 //Acciones predefinidas por el codigo proporcionado en la pagina de CUP
 action code {:
 
@@ -72,17 +68,9 @@ public void escribirTablaSimbolos() {
         System.out.println("Hola");
     }
 
-public void imprimirTablaSimbolos(){
-    for (String key: listaTablasSimbolos.keySet()) {
-        System.out.println("Tabla de simbolos: " + key);
-        System.out.println("Valores: ");
-        for (String item : listaTablasSimbolos.get(key)){
-            System.out.println(item);
-        }
-        System.out.println(item);
+    public void adios(){
+        System.out.println("Adios");
     }
-}
-
 :}
 
 parser code {:

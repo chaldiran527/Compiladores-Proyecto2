@@ -1,9 +1,69 @@
 /* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
 package proyectocompi2;
 import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 //Acciones predefinidas por el codigo proporcionado en la pagina de CUP
 action code {:
+
+    //Funcion que sirve para imprimir la tabla de simbolos
+    //No tiene params de entrada ni de salida
+//    HashMap<String, ArrayList<String>> listaTablasSimbolos = new HashMap<String, ArrayList<String>>();
+    LinkedHashMap<String, ArrayList<String>> listaTablasSimbolos = new LinkedHashMap<String, ArrayList<String>>();
+
+    String currHash = "";
+    String globalHash = "globalTS";
+
+    /*Funcion para imprimir en consola la tabla de simbolos generada en el parse
+    */
+    public void imprimirTablaSimbolos(){
+        for(String key: listaTablasSimbolos.keySet()) {
+            System.out.println("\nTabla de simbolo: " + key);
+            System.out.println("Valores : ");
+            for(String item : listaTablasSimbolos.get(key)){
+                System.out.print(item);
+            }
+            System.out.println("");
+        }
+    }
+
+public void escribirTablaSimbolos() {
+    String filePath = "C:\\Users\\Usuario\\Documents\\NetBeansProjects\\ProyectoCompi2\\src\\proyectocompi2\\outputParser.txt";;
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        for (String key : listaTablasSimbolos.keySet()) {
+            writer.write("\nTabla de simbolo: " + key + "\n");
+            writer.write("Valores : \n");
+            for (String item : listaTablasSimbolos.get(key)) {
+                writer.write(item);
+            }
+            writer.write("\n");
+        }
+    } catch (IOException e) {
+        System.err.println("Error escribiendo al archivo: " + e.getMessage());
+    }
+}
+
+    /*Funcion que recibe la tabla de simbolos y el id como hilera para retornar el tipo
+    */
+    public String getTipo(ArrayList<String> tablasSimbolos, String id){
+        String tipo = "null";
+        for (String token : tablasSimbolos){
+            String[] partesToken = token.split(":");
+            if(id.equals(partesToken[0])){
+                tipo = partesToken[1];
+            }
+        }
+    }
+
     public void hola(){
         System.out.println("Hola");
     }
@@ -16,11 +76,44 @@ action code {:
 parser code {:
     // Connect this parser to a scanner!
     Lexer lex;
-
+    boolean syntaxError;
+    ArrayList<String> errores = new ArrayList<String>();
+    String errorActual = "";
     @SuppressWarnings("deprecation")
     public parser(Lexer lex){
         this.lex = lex;
         this.symbolFactory = new DefaultSymbolFactory();
+        this.syntaxError = false; // Inicializar el booleano de errores
+    }
+
+
+    /*Funcion syntax_error sobreescrita para el manejo de errores en idioma espaniol 
+    Recibe de parametro el symbol del token actual en el que se ha encontrado un error
+    No retorna nada 
+    */
+    public void syntax_error(Symbol errorSymbol) {//Se imprime la linea y columna del error
+        errorActual = "Error sintactico en la linea: " + errorSymbol.left + ", y columna " + errorSymbol.right;
+        //System.err.println("Error sintactico en la linea: " + errorSymbol.left + ", y columna " + errorSymbol.right );
+        this.errores.add(errorActual);
+        this.syntaxError = true; //El booleano se pone en true para indicar que se encontro un error 
+    }
+
+    // Metodo que verifica si hubo un error sintactico, el cual no recibe ni retorna valores 
+    public boolean huboError() {
+        return syntaxError;
+    }
+
+    //Metodo que imprime si hubo error sintactico y si la gramatica puede ser generada 
+    public void estadoGramatica() {
+        if (huboError()) {
+            System.out.println("El archivo fuente no puede ser generado por la gramatica, debido a errores encontrados en estas partes del archivo:\n");
+            for(String currentError : errores){
+                System.out.println("\t " + currentError);            
+            }
+
+        } else {
+            System.out.println("El archivo fuente si puede ser generado por la gramatica");
+        }
     }
 :}
 
@@ -68,11 +161,17 @@ non terminal tsantaclaus, tlsantaclaus;
 //No terminales de funciones
 non terminal bolsaNavidena, bolsaNavidenaAux, defBolsaNavidena, bolsasNavidenas, codigoBolsaNavidena;
 
+//No terminales de multiples parametros
+non terminal paramBastoncitos, defParamBastoncito, expresionesBastoncitos, defExprBastoncito;
+
 //No terminales de lineas y sentencias de codigo 
-non terminal lineasDeNavidad, auxLineasDeNavidad, creaRegalo; 
+non terminal lineasDeNavidad, auxLineasDeNavidad, creaRegalo, asignaRegalo, asignaMultiplesRegalos; 
 
 //No terminales de expresiones y asignaciones
-non terminal exprRegalo, regaloManual, regalocompradoRelacional;
+non terminal exprRegalo, regaloManual, regalocompradoRelacional, regaloprinBinario, regaloprinUnario, pedirBolsaNavidena, printBolsaNavidena, readBolsaNavidena ;
+
+//No terminales de estructuras de control 
+non terminal pesebre, while_esperarasanta, condicion_esperarasanta, for_envuelve, do_hace, if_elfo, elif_hada_duende, elif_hada, def_elif_hada, else_duende;
 
 /* No terminal Inicial */
 non terminal navidad; 
@@ -80,15 +179,13 @@ non terminal navidad;
 
 /*Definicion del orden de las precedencias*/
 
-//precedence left ENTREGA; // a > b,  a < b, a == b, a != b, a => b, a =< b
-/*
-precedence left g_merryberry,
-                l_slinky,
-                e_jinglebell,
-                ne_tinseltoes,
-                ge_snowflake,
-                le_candycane;
-*/
+precedence left res_dancer, sum_dasher;
+precedence left div_int_vixen, div_float_blitzen, mul_prancer;
+precedence left mod_comet, pow_cupid;
+
+precedence left GRINCH,
+                QUIEN;
+                
 precedence left le_candycane,
             ge_snowflake,
             ne_tinseltoes,
@@ -104,25 +201,116 @@ precedence left not_gaspar;
 start with navidad;
 
 //Simbolo inicial
-navidad ::= {:
-    System.out.println("\nNavidad.");
-  :}  bolsaNavidena;
+navidad ::=
+    {:
+//        listaTablasSimbolos.put(globalHash, new ArrayList<String>());
+    :}
+     bolsaNavidena {:
+//        hola();
+//        adios();
+    imprimirTablaSimbolos();
+    escribirTablaSimbolos();
+    System.out.println("Fin del parseo...\n");
+  
+  :} ;
 
 bolsaNavidena ::=  {:
-    System.out.println("\nBolsa Navidena.");
-  :}  bolsaNavidenaAux;
+    System.out.println("\nInicio del parseo...");
+  :}  bolsaNavidenaAux
+    ;
 
 //Llamada recursiva para llamar 1 o mas funciones 
 bolsaNavidenaAux ::= defBolsaNavidena | bolsaNavidenaAux defBolsaNavidena ;
 
 
 //Definicion del tipo y llamado al codigo dentro de la funcion
-defBolsaNavidena ::= bolsasNavidenas codigoBolsaNavidena ;
+defBolsaNavidena ::= bolsasNavidenas codigoBolsaNavidena;
 
-//Se definen tipos de funciones: main, tipo sin parametros y tipo con parametros 
-bolsasNavidenas ::= FESTIVAL t_int_sinterklass ARBOL ABRECUENTO CIERRACUENTO 
-					| FESTIVAL tsantaclaus PERSONA ABRECUENTO CIERRACUENTO  
-					; //| FESTIVAL tsantaclaus PERSONA ABRECUENTO paramBastoncitos CIERRACUENTO ;
+//Se definen tipos de funciones: main,void, tipo sin parametros y tipo con parametros 
+bolsasNavidenas ::= FESTIVAL t_int_sinterklass ARBOL ABRECUENTO CIERRACUENTO
+                    {://Se ingresan al hash la info de la funcion declarada y se inicializa una nueva tabla de simbolos
+                        String tipoTabla = " Tipo Dato: ";
+                        tipoTabla =  tipoTabla + "int;\n";
+                        ArrayList<String> funMain = new ArrayList<String>();
+                        currHash = "main";
+                        String nombreDato = " Nombre: ";
+                        nombreDato = nombreDato + "main" + ";";
+                        String tipoEntrada = "Tipo Entrada: ";
+                        tipoEntrada = tipoEntrada + "Funcion;";
+                        funMain.add(tipoEntrada);
+                        funMain.add(nombreDato);
+                        funMain.add(tipoTabla); 
+                        listaTablasSimbolos.put(currHash, funMain); 
+                        
+                    :}
+                    | FESTIVAL tsantaclaus:t PERSONA:per ABRECUENTO CIERRACUENTO 
+                    {: //Se ingresan al hash la info de la funcion declarada y se inicializa una nueva tabla de simbolos
+                        currHash = per.toString();
+                        String tipoDato = " Tipo Dato: ";
+                        tipoDato =  tipoDato + t.toString()  + ".\n";
+                        String nombreDato = " Nombre: ";
+                        nombreDato = nombreDato + per.toString() + ",";
+                        String tipoEntrada = "Tipo Entrada: ";
+                        tipoEntrada = tipoEntrada + "Funcion" + ",";
+                        tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                        ArrayList<String> fun = new ArrayList<String>();
+                        fun.add(tipoEntrada);
+                        //listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        listaTablasSimbolos.put(currHash, fun);
+
+                    :}
+                    | FESTIVAL SINREGALO PERSONA:per ABRECUENTO CIERRACUENTO 
+                    {: //Se ingresan al hash la info de la funcion declarada y se inicializa una nueva tabla de simbolos
+                        currHash = "void";
+                        String tipoDato = " Tipo Dato: ";
+                        tipoDato =  tipoDato + "void"  + ".\n";
+                        String nombreDato = " Nombre: ";
+                        nombreDato = nombreDato + per.toString() + ",";
+                        String tipoEntrada = "Tipo Entrada: ";
+                        tipoEntrada = tipoEntrada + "Funcion" + ",";
+                        tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                        ArrayList<String> fun = new ArrayList<String>();
+                        fun.add(tipoEntrada);
+                        //listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        listaTablasSimbolos.put(currHash, fun);
+
+                    :}
+
+                    | FESTIVAL tsantaclaus:t PERSONA:per ABRECUENTO
+                    {: //Se ingresan al hash la info de la funcion declarada y se inicializa una nueva tabla de simbolos
+                        currHash = per.toString();
+                        String tipoDato = " Tipo Dato: ";
+                        tipoDato =  tipoDato + t.toString()  + ".\n";
+                        String nombreDato = " Nombre: ";
+                        nombreDato = nombreDato + per.toString() + ",";
+                        String tipoEntrada = "Tipo Entrada: ";
+                        tipoEntrada = tipoEntrada + "Funcion" + ",";
+                        tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                        ArrayList<String> fun = new ArrayList<String>();
+                        fun.add(tipoEntrada);
+                        //listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        listaTablasSimbolos.put(currHash, fun);
+
+                    :}                    
+                      paramBastoncitos CIERRACUENTO 
+
+                    | FESTIVAL SINREGALO PERSONA:per ABRECUENTO 
+//Se ingresan al hash la info de la funcion declarada y se inicializa una nueva tabla de simbolos
+                    {:                       
+                        currHash = "void";
+                        String tipoDato = " Tipo Dato: ";
+                        tipoDato =  tipoDato + "void"  + ".\n";
+                        String nombreDato = " Nombre: ";
+                        nombreDato = nombreDato + per.toString() + ",";
+                        String tipoEntrada = "Tipo Entrada: ";
+                        tipoEntrada = tipoEntrada + "Funcion" + ",";
+                        tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                        ArrayList<String> fun = new ArrayList<String>();
+                        fun.add(tipoEntrada);
+                        listaTablasSimbolos.put(currHash, fun);
+                    :}
+                    paramBastoncitos CIERRACUENTO 
+                    ;
 
 
 //No terminal de palabras reservadas para Tipos de datos
@@ -143,28 +331,159 @@ tlsantaclaus ::=
 	l_tPAPANOEL:l {: RESULT = l; :}  | 
 	l_fPAPANOEL:l {: RESULT = l; :} ;  
 
+ 
+
 //Cuerpo de la funcion con las lineas de codigo entre corchetes {...}
-codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO ; 
+codigoBolsaNavidena ::= ABREREGALO lineasDeNavidad CIERRAREGALO | ABREREGALO error CIERRAREGALO; 
 
 
 //Definicion recursiva para poder llamar varias lineas de Codigo
 lineasDeNavidad ::= auxLineasDeNavidad | lineasDeNavidad auxLineasDeNavidad ;
 
 //Distintos tipos de lineas que se pueden utilizar dentro de funciones incluyendo estructuras de control y asignaciones
-auxLineasDeNavidad ::= creaRegalo FINREGALO 
-                                | RETORNAREGALO tlsantaclaus FINREGALO;
+auxLineasDeNavidad ::= creaRegalo FINREGALO | asignaRegalo FINREGALO
+                        | pesebre
+                        | exprRegalo FINREGALO
+                        | PERSONA asignaMultiplesRegalos FINREGALO
+                        | NARRA ABRECUENTO exprRegalo CIERRACUENTO FINREGALO
+                        //print("",1,2,3)|
+                        | NARRA ABRECUENTO l_string_nicolas SEPARAREGALO expresionesBastoncitos CIERRACUENTO FINREGALO
+                                | RETORNAREGALO tlsantaclaus FINREGALO
+                                | codigoBolsaNavidena
+                                | CORTA FINREGALO 
+                                | error FINREGALO;
 
 //Creacion, llamados y asignaciones a variables, incluyendo arreglos
 //local int var; local int var = 2; local int arreglo [10]
-creaRegalo ::= NATIVIDAD tsantaclaus PERSONA | NATIVIDAD tsantaclaus PERSONA ENTREGA exprRegalo
-                | PERSONA ENTREGA exprRegalo | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE
-                | NATIVIDAD tsantaclaus PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo 
-                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo 
-                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ; // PERSONA
+creaRegalo ::= NATIVIDAD tsantaclaus:t PERSONA:per 
+                {://Se ingresan a la tabla la info del simbolo declarado
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato + t.toString()  + ".\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Local" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        
+                :}
+                | NATIVIDAD tsantaclaus:t PERSONA:per ENTREGA exprRegalo
+                {://Se ingresan a la tabla la info del simbolo declarado
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato + t.toString()  + ".\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Local" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        
+                :}
+                | NATIVIDAD tsantaclaus:t PERSONA:per  ABREEMPAQUE exprRegalo CIERRAEMPAQUE
+                {://Se ingresan a la tabla la info del simbolo declarado
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato +  t.toString() + "[ ] .\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Local" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        
+                :}
+                | NATIVIDAD tsantaclaus:t PERSONA:per ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo
+                {://Se ingresan a la tabla la info del simbolo declarado
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato +  t.toString() + "[ ] .\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Local" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        
+                :}
+		| NATIVIDAD tsantaclaus:t PERSONA:per ABREEMPAQUE exprRegalo CIERRAEMPAQUE asignaMultiplesRegalos //ABREREGALO expresionesBastoncitos CIERRAREGALO
+                {://Se ingresan a la tabla la info del simbolo declarado
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato +  t.toString() + "[ ].\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Local" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada); 
+                        
+                :}
+                ; // | PERSONA ;
+
+asignaRegalo ::= PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ENTREGA exprRegalo | PERSONA ENTREGA exprRegalo ;
+
+asignaMultiplesRegalos ::= ENTREGA ABREREGALO expresionesBastoncitos CIERRAREGALO;
+
+//Diferentes casos posibles de llamar a una funcion 
+pedirBolsaNavidena ::= PERSONA ABRECUENTO CIERRACUENTO |
+					   PERSONA ABRECUENTO expresionesBastoncitos CIERRACUENTO
+					   | readBolsaNavidena ;//printBolsaNavidena ;//;
+
+
+//Llamados de print (expresion) y ("", , ...)
+//printBolsaNavidena ::= NARRA ABRECUENTO exprRegalo CIERRACUENTO;
+//					| NARRA ABRECUENTO l_string_nicolas SEPARAREGALO expresionesBastoncitos CIERRACUENTO;
+
+//Llamados de read con cero parametros y con el caso de que hayan uno o mas parametros 
+readBolsaNavidena ::= ESCUCHA ABRECUENTO CIERRACUENTO | ESCUCHA ABRECUENTO expresionesBastoncitos CIERRACUENTO;
+
 
 //Tipos de expresiones presentes en el lenguaje, incluyendo literales, asignaciones, multiples expresiones en parentesis 
 //expresiones aritmeticas unarias/binarias, logicas, relacionales y llamados a funciones
-exprRegalo ::=  tlsantaclaus | regaloManual;
+exprRegalo ::=  tlsantaclaus | regalocompradoRelacional | regaloManual | regaloprinBinario | regaloprinUnario | PERSONA
+                                | PERSONA ABREEMPAQUE exprRegalo CIERRAEMPAQUE 
+                                | ABRECUENTO expresionesBastoncitos CIERRACUENTO
+				| ABREEMPAQUE expresionesBastoncitos CIERRAEMPAQUE
+                                | pedirBolsaNavidena; //
+
+
+//Estructuras de control utilizadas en el lenguaje
+pesebre ::= while_esperarasanta | for_envuelve  | do_hace | if_elfo ; //| switch_trineo 
+
+//Definicien del do-while: do{...} until()|
+do_hace ::= HACE ABREREGALO lineasDeNavidad CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO
+             | HACE ABREREGALO CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO; 
+
+//REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO 
+//            HACE ABREREGALO CIERRAREGALO REVISA ABRECUENTO condicion_esperarasanta CIERRACUENTO FINREGALO ;
+
+
+//Definicion del bucle while () {...}
+while_esperarasanta ::= ESPERARASANTA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO
+                        | ESPERARASANTA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO CIERRAREGALO ;
+
+condicion_esperarasanta ::=  l_tPAPANOEL:l {: RESULT = l; :}  
+                              |   l_fPAPANOEL:l {: RESULT = l; :} 
+                        | regalocompradoRelacional;
+
+//Definicion for(int i = 0; i < 4; i++){...}
+for_envuelve ::= ENVUELVE ABRECUENTO asignaRegalo FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO 
+                | ENVUELVE ABRECUENTO asignaRegalo FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREREGALO CIERRAREGALO ;
+
+//Los casos del if(elfo), else(duende) y elif(hada). if(), if(){}else{}, if()elif(){}...else{}
+if_elfo ::= ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO 
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO 
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO elif_hada_duende
+		| ELFO ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO elif_hada_duende DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO ;
+
+//Caso elif con varios posibles elif y otro elif else
+elif_hada_duende ::= elif_hada | else_duende elif_hada ;
+elif_hada ::= def_elif_hada | elif_hada def_elif_hada ;
+def_elif_hada ::= HADA ABRECUENTO condicion_esperarasanta CIERRACUENTO ABREREGALO lineasDeNavidad CIERRAREGALO ;
+else_duende ::= DUENDE ABREREGALO lineasDeNavidad CIERRAREGALO ;
+
 
 //Operaciones relacionales
 // a > b,  a < b, a == b, a != b, a => b, a =< b
@@ -175,10 +494,42 @@ regalocompradoRelacional ::= exprRegalo g_merryberry exprRegalo |
                                     exprRegalo ge_snowflake exprRegalo |
                                     exprRegalo le_candycane exprRegalo ;
 
+//Lista de expresiones (,,), definidos recursivamente para poder tener uno o mas 
+expresionesBastoncitos ::= defExprBastoncito | expresionesBastoncitos SEPARAREGALO  defExprBastoncito ;
+defExprBastoncito ::= exprRegalo;
+
+//Parametros de funciones (,,), definidos recursivamente para poder tener uno o mas 
+paramBastoncitos ::= defParamBastoncito | paramBastoncitos SEPARAREGALO defParamBastoncito ;
+defParamBastoncito ::= tsantaclaus:t PERSONA:per 
+                {:
+ 
+                    String tipoDato = " Tipo Dato: ";
+                    tipoDato =  tipoDato + t.toString()  + ".\n";
+                    String nombreDato = " Nombre: ";
+                    nombreDato = nombreDato + per.toString() + ",";
+                    String tipoEntrada = "Tipo Entrada: ";
+                    tipoEntrada = tipoEntrada + "Parametro" + ",";
+                    tipoEntrada = tipoEntrada + nombreDato + tipoDato;
+                    listaTablasSimbolos.get(currHash).add(tipoEntrada);                         
+                :}                    
+                ;
+
 //Operaciones logicas
 // a ^ b, a # b, !a 
 regaloManual ::= exprRegalo and_melchior exprRegalo |
 				exprRegalo or_balthassar exprRegalo |
 				not_gaspar exprRegalo ;
 
+//Operaciones aritmeticas unarias --a, ++a, a++, a--
+regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA; //|
+
+
+//Operaciones aritmeticas binarias a+b; a-b, a/b, a//b,a*b a**b, 
+regaloprinBinario ::= exprRegalo sum_dasher exprRegalo |
+					exprRegalo res_dancer exprRegalo |
+					exprRegalo mul_prancer exprRegalo |
+					exprRegalo div_int_vixen exprRegalo |
+					exprRegalo div_float_blitzen exprRegalo |
+					exprRegalo mod_comet exprRegalo |
+					exprRegalo pow_cupid exprRegalo ;
 

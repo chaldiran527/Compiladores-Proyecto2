@@ -39,8 +39,8 @@ rt_float_santa = -? ({rsantaclaus} {isantaclaus}+ ("." {isantaclaus}+)? (("e" | 
 "for"			return ENVUELVE
 "while"			return ESPERARASANTA
 "do"			return HACE
-"until"         return REVISA
-"switch"        return TRINEO
+"until"         	return REVISA
+"switch"        	return TRINEO
 "case"			return CUERDA
 "default"		return FRENO
 "break"			return CORTA
@@ -71,37 +71,37 @@ rt_float_santa = -? ({rsantaclaus} {isantaclaus}+ ("." {isantaclaus}+)? (("e" | 
 
 //asignacion, tipos de parentesis con sus terminales a retornar
 "<="   			return ENTREGA
-"|"				return FINREGALO
+"|"			return FINREGALO
 “(“   			return ABRECUENTO
 “)” 			return CIERRACUENTO
-“[“   			return ABREEMPAQUE
-“]” 			return CIERRAEMPAQUE
+“[“   			return ABREREGALO
+“]” 			return CIERRAREGALO
 “{“   			return ABREEMPAQUE
 “}” 			return CIERRAEMPAQUE
-":"				return LUCES
+":"			return LUCES
 
 //Terminales relacionales
 "=="			return e_jinglebell
 "!="			return ne_tinseltoes
-"<"				return l_slinky
-">"				return g_merryberry
+"<"			return l_slinky
+">"			return g_merryberry
 "=>"			return ge_snowflake
 "=<"			return le_candycane
 
 //Terminales de operadores logicos
-"^"				return and_melchior
-"#"				return or_balthassar
-"!"				return not_gaspar
+"^"			return and_melchior
+"#"			return or_balthassar
+"!"			return not_gaspar
 
 //Identificador con su terminal a usar
 rpersona 		return PERSONA
 
 //Literales con sus terminales
 rt_int_sinterklass 			return l_int_dedmoroz
-rt_pos_int_sinterklass 		return l_pos_int_dedmoroz
+rt_pos_int_sinterklass 			return l_pos_int_dedmoroz
 rt_float_santa 				return l_float_padrenavidadS
-rRegalo 					return l_MINIREGALO
-rSeparador					return SEPARAREGALO
+rRegalo 				return l_MINIREGALO
+rSeparador				return SEPARAREGALO
 
 
 //No terminales definidos para nuestra gramatica: 
@@ -132,6 +132,7 @@ lineasDeNavidad ::= auxLineasDeNavidad | lineasDeNavidad auxLineasDeNavidad ;
 auxLineasDeNavidad ::= creaRegalo FINREGALO 
 					 | pesebre | exprRegalo FINREGALO
 					 | RETORNAREGALO exprRegalo FINREGALO
+					 | codigoBolsaNavidena
 					 | CORTA FINREGALO ;
 
 //No terminal de palabras reservadas para Tipos de datos
@@ -162,7 +163,7 @@ exprRegalo ::=  tlsantaclaus | creaRegalo | ABRECUENTO expresionesBastoncitos CI
 creaRegalo ::= "local" tsantaclaus PERSONA  | "local" tsantaclaus PERSONA ENTREGA exprRegalo
 				| PERSONA ENTREGA exprRegalo 
 				| "local" tsanataclaus PERSONA "[" l_pos_int_dedmoroz "]" 
-				| "local" tsanataclaus PERSONA "[" l_pos_int_dedmoroz "]" ENTREGA exprRegalo 
+				| "local" tsanataclaus PERSONA "[" l_pos_int_dedmoroz "]" ENTREGA "{" expresionesBastoncitos "}"
 				| PERSONA "[" l_pos_int_dedmoroz "]" ENTREGA exprRegalo 
 				| PERSONA | PERSONA "[" l_pos_int_dedmoroz "]";
 
@@ -174,10 +175,10 @@ pesebre ::= while_esperarasanta | for_envuelve | do_hace | switch_trineo | if_el
 while_esperarasanta ::= ESPERARASANTA ABRECUENTO regalocompradoRelacional CIERRACUENTO ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
 
 //Definicion for(int i = 0; i < 4; i++){...}
-for_esperarasanta ::= ENVUELVE ABRECUENTO creaREGALO FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
+for_envuelve ::= ENVUELVE ABRECUENTO creaREGALO FINREGALO regalocompradoRelacional FINREGALO regaloprinUnario CIERRACUENTO ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ;
 
-//Definicien del do-while: do{...} while()|
-do_hace ::= HACE ABREEMPAQUE lineasDeNavidad CIERRAEMPAQUE ESPERARASANTA ABRECUENTO exprRegalo FINREGALO ;
+//Definicion del do-while: do{...} until()|
+do_hace ::= HACE ABREREGALO lineasDeNavidad CIERRAREGALO REVISA ABRECUENTO exprRegalo CIERRACUENTO FINREGALO ;
 
 //Definicion del switch 
 switch_trineo ::= TRINEO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO switch_trineo_codigo CIERRACUENTO ;
@@ -188,12 +189,19 @@ switch_trineo_codigo ::= switch_trineo_caso | switch_trineo_codigo switch_trineo
 //"case numero: ..."    o   "default: ..." 
 switch_trineo_caso ::= CUERDA exprRegalo LUCES lineasDeNavidad | FRENO LUCES lineasDeNavidad ;
 
-//Los casos del if, else y elif
-if_elfo ::= ELFO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO 
-		| DUENDE ABRECUENTO lineasDeNavidad CIERRACUENTO | HADA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO ;
+//Los casos del if(elfo), else(duende) y elif(hada). if(), if(){}else{}, if()elif(){}...else{} 
+if_elfo ::= ELFO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO ;
+		| ELFO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO DUENDE ABRECUENTO lineasDeNavidad CIERRACUENTO 
+		| ELFO ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO elif_hada_duende;
+
+//Caso elif con v   arios posibles elif y otro elif else
+elif_hada_duende ::= elif_hada | elif_hada else_duende ;
+elif_hada ::= def_elif_hada | elif_hada def_elif_hada  ;
+def_elif_hada ::= HADA ABREEMPAQUE exprRegalo CIERRAEMPAQUE ABRECUENTO lineasDeNavidad CIERRACUENTO ;
+else_duende ::= DUENDE ABRECUENTO lineasDeNavidad CIERRACUENTO ;
 
 //Lista de expresiones (,,), definidos recursivamente para poder tener uno o mas 
-expresionesBastoncitos ::= defExprBastoncito | expresionesBastoncitos SEPARAREGALO defExprBastoncito ;
+expresionesBastoncitos ::= defExprBastoncito | defExprBastoncito SEPARAREGALO  expresionesBastoncitos  ;
 defExprBastoncito ::= exprRegalo;
 
 
@@ -204,11 +212,11 @@ defParamBastoncito ::= tsantaclaus PERSONA ;
 
 //Operaciones aritmeticas binarias
 regaloprinBinario ::= exprRegalo sum_dasher exprRegalo |
-					exprRegalo res_dancer exprRegalo |
-					exprRegalo div_int_vixen exprRegalo |
-					exprRegalo div_float_blitzen exprRegalo |
-					exprRegalo mod_comet exprRegalo |
-					exprRegalo pow_cupid exprRegalo ;
+				exprRegalo res_dancer exprRegalo |
+				exprRegalo div_int_vixen exprRegalo |
+				exprRegalo div_float_blitzen exprRegalo |
+				exprRegalo mod_comet exprRegalo |
+				exprRegalo pow_cupid exprRegalo ;
 
 //Operaciones aritmeticas unarias --a, ++a, a++, a--
 regaloprinUnario ::= QUIEN PERSONA | GRINCH PERSONA | PERSONA QUIEN | PERSONA GRINCH; 
